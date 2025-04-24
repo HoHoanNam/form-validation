@@ -65,6 +65,35 @@
           <span class="form-message"></span>
         </div>
 
+        <!-- Giới tính -->
+        <div class="form-group">
+          <label class="form-label">Giới tính</label>
+
+          <div class="form-body">
+            <div class="form-body__input">
+              <input
+                name="gender"
+                type="radio"
+                value="male"
+                class="form-control"
+              />
+              <label>Nam</label>
+            </div>
+
+            <div class="form-body__input">
+              <input
+                name="gender"
+                type="radio"
+                value="female"
+                class="form-control"
+              />
+              <label>Nữ</label>
+            </div>
+          </div>
+
+          <span class="form-message"></span>
+        </div>
+
         <button class="form-submit">Đăng ký</button>
       </form>
     </div>
@@ -74,6 +103,7 @@
       // Output
       Validator({
         form: '#form-1',
+        formGroupSelector: '.form-group',
         errorSelector: '.form-message',
         rules: [
           Validator.isRequired('#fullname', 'Vui lòng nhập tên đầy đủ của bạn'),
@@ -88,6 +118,7 @@
             },
             'Mật khẩu nhập lại không chính xác'
           ),
+          Validator.isRequired('input[name="gender"]'),
         ],
         onSubmit(data) {
           // Call API

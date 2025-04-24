@@ -104,3 +104,24 @@ html {
 .spacer {
   margin-top: 36px;
 }
+
+.form-body {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.form-body .form-control {
+  width: 24px;
+  height: 24px;
+}
+
+.form-body__input {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-body__input label {
+  font-size: 1.4rem;
+}

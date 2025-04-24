@@ -1,11 +1,24 @@
 // Đối tượng Validator
 function Validator(options) {
+  function getParent(element, selector) {
+    while (element.parentElement) {
+      // Kiểm tra xem cái element này có match với CSS selector hay không
+      if (element.parentElement.matches(selector)) {
+        return element.parentElement;
+      }
+      element = element.parentElement;
+    }
+  }
+
   var selectorRules = {};
 
   // Hàm thực hiện validate
-  function validate(inputElement, formGroupElement, errorElement, rule) {
+  function validate(inputElement, rule) {
     var errorMessage;
-    var errorElement = formGroupElement.querySelector(options.errorSelector);
+    var errorElement = getParent(
+      inputElement,
+      options.formGroupSelector
+    ).querySelector(options.errorSelector);
 
     // Lấy ra các rules của selector
     // Nếu có lỗi thì dừng việc kiểm tra
@@ -13,7 +26,13 @@ function Validator(options) {
 
     // Lặp qua các rules & kiểm tra
     for (var i = 0; i < rules.length; i++) {
-      errorMessage = rules[i](inputElement.value);
+      switch (inputElement.type) {
+        case 'radio':
+        case 'checkbox':
+          break;
+        default:
+          errorMessage = rules[i](inputElement.value);
+      }
       if (errorMessage) break;
     }
 
@@ -22,10 +41,14 @@ function Validator(options) {
     // 2. Từ thẻ cha của nó, tìm thẻ con có class="form-message"
     if (errorMessage) {
       errorElement.innerText = errorMessage;
-      formGroupElement.classList.add('invalid');
+      getParent(inputElement, options.formGroupSelector).classList.add(
+        'invalid'
+      );
     } else {
       errorElement.innerText = '';
-      formGroupElement.classList.remove('invalid');
+      getParent(inputElement, options.formGroupSelector).classList.remove(
+        'invalid'
+      );
     }
 
     // Covert sang kiểu boolean
@@ -45,17 +68,8 @@ function Validator(options) {
       // Thực hiện lặp qua từng rule và validate
       options.rules.forEach((rule) => {
         var inputElement = formElement.querySelector(rule.selector);
-        var formGroupElement = inputElement.parentElement;
-        var errorElement = formGroupElement.querySelector(
-          options.errorSelector
-        );
 
-        var isInvalid = validate(
-          inputElement,
-          formGroupElement,
-          errorElement,
-          rule
-        );
+        var isInvalid = validate(inputElement, rule);
 
         if (isInvalid) {
           isFormValid = false;
@@ -97,21 +111,19 @@ function Validator(options) {
       var inputElement = formElement.querySelector(rule.selector);
 
       if (inputElement) {
-        var formGroupElement = inputElement.parentElement;
-        var errorElement = formGroupElement.querySelector(
-          options.errorSelector
-        );
+        var parentElemnt = getParent(inputElement, options.formGroupSelector);
+        var errorElement = parentElemnt.querySelector(options.errorSelector);
 
         // Xử lý trường hợp blur khỏi input
         inputElement.onblur = function () {
-          validate(inputElement, formGroupElement, errorElement, rule);
+          validate(inputElement, rule);
         };
 
         // Xử lý mỗi khi người dùng nhập vào input
         // oninput: nó sẽ lọt vào sự kiện này mỗi khi người dùng gõ
         inputElement.oninput = function () {
           errorElement.innerText = '';
-          formGroupElement.classList.remove('invalid');
+          parentElemnt.classList.remove('invalid');
         };
       }
     });
