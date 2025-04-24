@@ -111,6 +111,10 @@ html {
   gap: 20px;
 }
 
+.form-body.vertical {
+  flex-direction: column;
+}
+
 .form-body .form-control {
   width: 24px;
   height: 24px;

@@ -9,8 +9,7 @@
   <body>
     <div class="main">
       <form action="" method="POST" class="form" id="form-1">
-        <h3 class="heading">Thành viên đăng ký</h3>
-        <p class="desc">Cùng nhau học lập trình miễn phí tại F8 ❤️</p>
+        <h3 class="heading">💓 Đăng ký thành viên 💓</h3>
 
         <div class="spacer"></div>
 
@@ -94,6 +93,78 @@
           <span class="form-message"></span>
         </div>
 
+        <!-- Ngôn ngữ -->
+        <div class="form-group">
+          <label class="form-label">Ngôn ngữ</label>
+
+          <div class="form-body vertical">
+            <div class="form-body__input">
+              <input
+                name="languages"
+                type="checkbox"
+                value="python"
+                class="form-control"
+              />
+              <label>Python</label>
+            </div>
+
+            <div class="form-body__input">
+              <input
+                name="languages"
+                type="checkbox"
+                value="java"
+                class="form-control"
+              />
+              <label>Java</label>
+            </div>
+
+            <div class="form-body__input">
+              <input
+                name="languages"
+                type="checkbox"
+                value="javascript"
+                class="form-control"
+              />
+              <label>Javascript</label>
+            </div>
+
+            <div class="form-body__input">
+              <input
+                name="languages"
+                type="checkbox"
+                value="c++"
+                class="form-control"
+              />
+              <label>C++</label>
+            </div>
+          </div>
+
+          <span class="form-message"></span>
+        </div>
+
+        <!-- Tỉnh thành -->
+        <div class="form-group">
+          <label for="province" class="form-label">Tỉnh thành</label>
+
+          <select id="province" name="province" class="form-control">
+            <option value="">-- Chọn Tỉnh/TP --</option>
+            <option value="hni">Hà Nội</option>
+            <option value="hpg">Hải Phòng</option>
+            <option value="dng">Đà Nẵng</option>
+            <option value="hcm">Hồ Chí Minh</option>
+            <option value="cth">Cần Thơ</option>
+          </select>
+
+          <span class="form-message"></span>
+        </div>
+
+        <!-- Ảnh đại diện -->
+        <div class="form-group">
+          <label for="avatar" class="form-label">Ảnh đại diện</label>
+          <input id="avatar" name="avatar" type="file" class="form-control" />
+          <span class="form-message"></span>
+        </div>
+
         <button class="form-submit">Đăng ký</button>
       </form>
     </div>
@@ -119,6 +190,9 @@
             'Mật khẩu nhập lại không chính xác'
           ),
           Validator.isRequired('input[name="gender"]'),
+          Validator.isRequired('input[name="languages"]'),
+          Validator.isRequired('#province'),
+          Validator.isRequired('#avatar'),
         ],
         onSubmit(data) {
           // Call API

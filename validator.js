@@ -29,6 +29,9 @@ function Validator(options) {
       switch (inputElement.type) {
         case 'radio':
         case 'checkbox':
+          errorMessage = rules[i](
+            formElement.querySelector(rule.selector + ':checked')
+          );
           break;
         default:
           errorMessage = rules[i](inputElement.value);
@@ -85,8 +88,29 @@ function Validator(options) {
           const formValues = {};
 
           enableInputs.forEach((input) => {
-            if (input.name) {
-              formValues[input.name] = input.value;
+            switch (input.type) {
+              case 'radio':
+                formValues[input.name] = formElement.querySelector(
+                  `input[name="${input.name}"]:checked`
+                ).value;
+                break;
+
+              case 'checkbox':
+                if (!input.matches(':checked')) {
+                  formValues[input.name] = '';
+                  return formValues;
+                }
+                if (!Array.isArray(formValues[input.name])) {
+                  formValues[input.name] = [];
+                }
+                formValues[input.name].push(input.value);
+                break;
+
+              case 'file':
+                formValues[input.name] = input.files;
+
+              default:
+                formValues[input.name] = input.value;
             }
           });
 
@@ -108,9 +132,9 @@ function Validator(options) {
         selectorRules[rule.selector] = [rule.test];
       }
 
-      var inputElement = formElement.querySelector(rule.selector);
+      var inputElements = formElement.querySelectorAll(rule.selector);
 
-      if (inputElement) {
+      Array.from(inputElements).forEach((inputElement) => {
         var parentElemnt = getParent(inputElement, options.formGroupSelector);
         var errorElement = parentElemnt.querySelector(options.errorSelector);
 
@@ -125,7 +149,7 @@ function Validator(options) {
           errorElement.innerText = '';
           parentElemnt.classList.remove('invalid');
         };
-      }
+      });
     });
   }
 }
@@ -138,7 +162,7 @@ Validator.isRequired = function (selector, message) {
   return {
     selector,
     test(value) {
-      return value.trim() ? undefined : message || 'Vui lòng nhập trường này';
+      return value ? undefined : message || 'Vui lòng nhập trường này';
     },
   };
 };
